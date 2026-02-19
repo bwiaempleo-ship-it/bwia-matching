@@ -437,6 +437,23 @@
       // Save to "database"
       database.candidates.push(candidate);
       
+      // Save to Google Sheets
+      try {
+        await fetch('https://script.google.com/macros/s/AKfycbz_X7DJoTI-zOURJSUu2DSnjr8abP0ZKMalbBmhAUw_H3-IOrvlKy_3yfzYxaZ36zVjzw/exec', {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            type: 'candidate',
+            ...candidate
+          })
+        });
+      } catch (error) {
+        console.log('Datos guardados localmente');
+      }
+      
       // Show loading
       const resultsDiv = document.getElementById('candidate-results');
       const matchesDiv = document.getElementById('candidate-matches');
@@ -493,6 +510,23 @@
       
       // Save to "database"
       database.jobs.push(job);
+      
+      // Save to Google Sheets
+      try {
+        await fetch('https://script.google.com/macros/s/AKfycbz_X7DJoTI-zOURJSUu2DSnjr8abP0ZKMalbBmhAUw_H3-IOrvlKy_3yfzYxaZ36zVjzw/exec', {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            type: 'employer',
+            ...job
+          })
+        });
+      } catch (error) {
+        console.log('Datos guardados localmente');
+      }
       
       // Show loading
       const resultsDiv = document.getElementById('employer-results');
