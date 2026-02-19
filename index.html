@@ -149,7 +149,7 @@ f<!DOCTYPE html>
       <h1 class="text-3xl font-bold text-white">BWIA<span class="text-orange-400">·AI</span></h1>
       <div class="flex gap-4">
         <button onclick="showSection('candidato')" class="text-white hover:text-orange-400 transition">Busco Empleo</button>
-        <button onclick="showSection('employer')" class="text-white hover:text-orange-400 transition">Busco Talento</button>
+        <button onclick="showSection('empresa')" class="text-white hover:text-orange-400 transition">Busco Talento</button>
       </div>
     </div>
   </nav>
@@ -161,7 +161,7 @@ f<!DOCTYPE html>
       <p class="text-xl mb-8 text-gray-300">Conectamos talento con oportunidades usando inteligencia artificial</p>
       <div class="flex justify-center gap-4">
         <button onclick="showSection('candidato')" class="btn-primary">Soy Candidato</button>
-        <button onclick="showSection('employer')" class="btn-secondary">Soy Empresa</button>
+        <button onclick="showSection('empresa')" class="btn-secondary">Soy Empresa</button>
       </div>
       
       <div class="mt-12 grid grid-cols-3 gap-8 max-w-3xl mx-auto">
@@ -376,7 +376,7 @@ f<!DOCTYPE html>
             <p class="text-gray-700 mb-6">Nuestra IA considera múltiples factores: habilidades técnicas, experiencia, ubicación, expectativas salariales y cultura organizacional</p>
             <div class="flex justify-center gap-4">
               <button onclick="showSection('candidato')" class="btn-primary">Busco Empleo</button>
-              <button onclick="showSection('employer')" class="btn-secondary">Busco Talento</button>
+              <button onclick="showSection('empresa')" class="btn-secondary">Busco Talento</button>
             </div>
           </div>
         </div>
@@ -409,7 +409,7 @@ f<!DOCTYPE html>
       
       if (section === 'candidato') {
         document.getElementById('candidate-section').classList.remove('hidden');
-      } else if (section === 'employer') {
+      } else if (section === 'empresa') {
         document.getElementById('employer-section').classList.remove('hidden');
       }
       
@@ -520,7 +520,7 @@ f<!DOCTYPE html>
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            type: 'employer',
+            type: 'empresa',
             ...job
           })
         });
