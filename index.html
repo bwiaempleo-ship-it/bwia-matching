@@ -1,1 +1,642 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BWIA·AI – Empleo Chihuahua</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --azul: #1E3A8A;
+    --azul-med: #2B50C2;
+    --naranja: #F97316;
+    --naranja-light: #FFF0E6;
+    --bg: #F0F4FF;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: #1a1a2e; }
+  h1,h2,h3,.font-display { font-family: 'Sora', sans-serif; }
+  .nav-bar {
+    background: var(--azul);
+    background-image: linear-gradient(135deg, #1E3A8A 60%, #1a2f6e 100%);
+    box-shadow: 0 4px 24px rgba(30,58,138,0.18);
+  }
+  .logo-dot { color: var(--naranja); }
+  .hero {
+    background: linear-gradient(135deg, var(--azul) 0%, #1a3070 60%, #0f2055 100%);
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; top: -60px; right: -60px;
+    width: 320px; height: 320px; border-radius: 50%;
+    background: rgba(249,115,22,0.13); filter: blur(60px);
+  }
+  .hero::after {
+    content: ''; position: absolute; bottom: -40px; left: -40px;
+    width: 220px; height: 220px; border-radius: 50%;
+    background: rgba(255,255,255,0.05); filter: blur(40px);
+  }
+  .badge {
+    background: rgba(249,115,22,0.18); color: var(--naranja);
+    border: 1px solid rgba(249,115,22,0.3); border-radius: 999px;
+    padding: 4px 14px; font-size: 0.78rem; font-family: 'Sora', sans-serif;
+    font-weight: 600; letter-spacing: 0.04em; display: inline-block;
+  }
+  .tab-btn { transition: all 0.2s; border-radius: 10px; font-family: 'Sora', sans-serif; font-weight: 600; }
+  .tab-btn.active { background: var(--azul); color: #fff; box-shadow: 0 4px 16px rgba(30,58,138,0.22); }
+  .tab-btn:not(.active) { background: #fff; color: var(--azul); border: 2px solid #dde6f7; }
+  .card { background: #fff; border-radius: 18px; box-shadow: 0 2px 20px rgba(30,58,138,0.07); transition: box-shadow 0.2s; }
+  .card:hover { box-shadow: 0 6px 32px rgba(30,58,138,0.13); }
+  label { font-family: 'Sora', sans-serif; font-weight: 600; font-size: 0.83rem; color: #374151; }
+  input, textarea, select {
+    width: 100%; border: 1.5px solid #dde6f7; border-radius: 10px;
+    padding: 10px 14px; font-size: 0.93rem; color: #1a1a2e;
+    background: #f8faff; outline: none;
+    transition: border 0.2s, box-shadow 0.2s; font-family: 'Inter', sans-serif;
+  }
+  input:focus, textarea:focus {
+    border-color: var(--azul-med);
+    box-shadow: 0 0 0 3px rgba(43,80,194,0.1); background: #fff;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--naranja) 0%, #ea6800 100%);
+    color: #fff; border-radius: 12px; padding: 12px 28px;
+    font-family: 'Sora', sans-serif; font-weight: 700; font-size: 0.95rem;
+    letter-spacing: 0.02em; border: none; cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 16px rgba(249,115,22,0.3); width: 100%;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(249,115,22,0.38); }
+  .btn-primary:active { transform: translateY(0); }
+  .match-card {
+    background: #fff; border-radius: 16px; padding: 18px 20px;
+    box-shadow: 0 2px 16px rgba(30,58,138,0.07);
+    border-left: 4px solid var(--naranja); transition: transform 0.15s;
+    animation: fadeUp 0.4s both;
+  }
+  .match-card:hover { transform: translateX(4px); }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .match-pct { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--azul); }
+  .progress-bar { height: 6px; border-radius: 999px; background: #e8edf8; overflow: hidden; }
+  .progress-fill {
+    height: 100%; border-radius: 999px;
+    background: linear-gradient(90deg, var(--azul-med), var(--naranja));
+    transition: width 0.8s cubic-bezier(.4,0,.2,1);
+  }
+  .tag { background: #EEF2FF; color: var(--azul); border-radius: 6px; padding: 2px 8px; font-size: 0.75rem; font-weight: 600; font-family: 'Sora', sans-serif; }
+  .tag-empresa { background: var(--naranja-light); color: #c2500a; }
+  .msg-ok { background: #d1fae5; color: #065f46; border-radius: 10px; padding: 10px 16px; font-size: 0.9rem; }
+  .msg-err { background: #fee2e2; color: #991b1b; border-radius: 10px; padding: 10px 16px; font-size: 0.9rem; }
+  .section-title { font-family: 'Sora', sans-serif; font-weight: 700; font-size: 1.25rem; color: var(--azul); }
+  .spinner {
+    width: 36px; height: 36px; border: 3px solid #dde6f7;
+    border-top-color: var(--azul-med); border-radius: 50%;
+    animation: spin 0.8s linear infinite; margin: 0 auto;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .demo-note { background: #fff8e7; border: 1px solid #ffe4a0; border-radius: 10px; padding: 10px 14px; font-size: 0.82rem; color: #7a5500; font-family: 'Sora', sans-serif; }
+  .gas-box { background: #EEF2FF; border: 2px solid #C7D2FE; border-radius: 14px; padding: 16px; }
+  .btn-sec {
+    background: var(--azul); color: #fff; border-radius: 10px;
+    padding: 10px 18px; font-family: 'Sora', sans-serif; font-weight: 700;
+    font-size: 0.85rem; border: none; cursor: pointer; white-space: nowrap;
+    transition: background 0.2s;
+  }
+  .btn-sec:hover { background: var(--azul-med); }
+</style>
+</head>
+<body class="min-h-screen flex flex-col">
 
+<!-- NAV -->
+<nav class="nav-bar px-5 py-4 flex items-center justify-between sticky top-0 z-50">
+  <div class="flex items-center gap-2">
+    <span class="text-white font-display text-xl font-extrabold tracking-tight">BWIA<span class="logo-dot">·</span>AI</span>
+    <span class="badge ml-2 hidden sm:inline">Empleo Local</span>
+  </div>
+  <div class="flex gap-3 text-sm font-semibold">
+    <a href="#registros" class="text-blue-200 hover:text-white transition">Registrarse</a>
+    <a href="#matches" class="text-blue-200 hover:text-white transition">Matches</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero px-5 py-14 text-white text-center relative z-10">
+  <p class="badge mb-4">✦ Powered by IA simple · Chihuahua, México</p>
+  <h1 class="text-3xl sm:text-4xl font-extrabold leading-tight mb-3 font-display">
+    Conectamos talento<br/>con oportunidades
+  </h1>
+  <p class="text-blue-200 text-base max-w-md mx-auto mb-6 leading-relaxed">
+    Candidatos y empresas locales, unidos por coincidencia inteligente de puesto, habilidades y zona.
+  </p>
+  <div class="flex flex-wrap gap-3 justify-center text-sm">
+    <div class="flex items-center gap-2 bg-white bg-opacity-10 rounded-full px-4 py-2">
+      <span>🎯</span><span>Matching por IA</span>
+    </div>
+    <div class="flex items-center gap-2 bg-white bg-opacity-10 rounded-full px-4 py-2">
+      <span>📍</span><span>100% local</span>
+    </div>
+    <div class="flex items-center gap-2 bg-white bg-opacity-10 rounded-full px-4 py-2">
+      <span>📲</span><span>WhatsApp ready</span>
+    </div>
+  </div>
+</section>
+
+<!-- CONFIG GAS -->
+<div class="max-w-2xl mx-auto w-full px-4 mt-6">
+  <div class="gas-box">
+    <p class="font-display font-bold text-blue-900 text-sm mb-2">⚙️ Conectar con Google Sheets</p>
+    <div class="flex gap-2">
+      <input type="url" id="gasUrl"
+        placeholder="https://script.google.com/macros/s/.../exec"
+        style="font-size:0.8rem;" />
+      <button onclick="guardarGasUrl()" class="btn-sec">Conectar</button>
+    </div>
+    <p id="gasStatus" class="text-xs mt-2 text-blue-600 font-semibold"></p>
+    <p class="text-xs text-gray-500 mt-1">Pega aquí la URL de tu Google Apps Script y presiona Conectar.</p>
+  </div>
+</div>
+
+<!-- REGISTROS -->
+<section id="registros" class="max-w-2xl mx-auto w-full px-4 mt-8">
+  <h2 class="section-title mb-4">📝 Registro</h2>
+  <div class="flex gap-3 mb-6">
+    <button id="tabCandidato" class="tab-btn active flex-1 py-3" onclick="showTab('candidato')">👤 Soy candidato</button>
+    <button id="tabEmpresa" class="tab-btn flex-1 py-3" onclick="showTab('empresa')">🏢 Soy empresa</button>
+  </div>
+
+  <!-- FORM CANDIDATO -->
+  <div id="formCandidato" class="card p-6">
+    <h3 class="font-display font-bold text-lg text-blue-900 mb-5">Datos del candidato</h3>
+    <div class="grid grid-cols-1 gap-4">
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block mb-1">Nombre completo *</label>
+          <input type="text" id="c_nombre" placeholder="Ej. María López" />
+        </div>
+        <div>
+          <label class="block mb-1">Email *</label>
+          <input type="email" id="c_email" placeholder="maria@correo.com" />
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block mb-1">WhatsApp / Teléfono *</label>
+          <input type="tel" id="c_telefono" placeholder="614-123-4567" />
+        </div>
+        <div>
+          <label class="block mb-1">Ubicación en Chihuahua</label>
+          <input type="text" id="c_ubicacion" placeholder="Ej. Centro, Delicias, Juárez" />
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block mb-1">Años de experiencia</label>
+          <input type="text" id="c_experiencia" placeholder="Ej. 3 años, Recién egresado" />
+        </div>
+        <div>
+          <label class="block mb-1">Salario deseado</label>
+          <input type="text" id="c_salario" placeholder="Ej. $12,000 mensual" />
+        </div>
+      </div>
+      <div>
+        <label class="block mb-1">Puesto buscado *</label>
+        <input type="text" id="c_puesto" placeholder="Ej. Vendedor, Desarrollador, Contador" />
+      </div>
+      <div>
+        <label class="block mb-1">Habilidades (separadas por coma) *</label>
+        <textarea id="c_habilidades" rows="2" placeholder="Ej. Ventas, Excel, atención al cliente, inglés básico"></textarea>
+      </div>
+    </div>
+    <div id="msgCandidato" class="mt-3 hidden"></div>
+    <button class="btn-primary mt-5" onclick="registrarCandidato()">✅ Registrarme como candidato</button>
+  </div>
+
+  <!-- FORM EMPRESA -->
+  <div id="formEmpresa" class="card p-6 hidden">
+    <h3 class="font-display font-bold text-lg text-blue-900 mb-5">Datos de la vacante</h3>
+    <div class="grid grid-cols-1 gap-4">
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block mb-1">Nombre de empresa *</label>
+          <input type="text" id="e_nombre" placeholder="Ej. Grupo Salcedo SA" />
+        </div>
+        <div>
+          <label class="block mb-1">Email de contacto *</label>
+          <input type="email" id="e_email" placeholder="rh@empresa.com" />
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block mb-1">Teléfono *</label>
+          <input type="tel" id="e_telefono" placeholder="614-000-0000" />
+        </div>
+        <div>
+          <label class="block mb-1">Ubicación</label>
+          <input type="text" id="e_ubicacion" placeholder="Ej. Chihuahua centro, Cd. Juárez" />
+        </div>
+      </div>
+      <div>
+        <label class="block mb-1">Puesto ofrecido *</label>
+        <input type="text" id="e_puesto" placeholder="Ej. Ejecutivo de Ventas, Programador Junior" />
+      </div>
+      <div>
+        <label class="block mb-1">Salario ofrecido</label>
+        <input type="text" id="e_salario" placeholder="Ej. $10,000 – $14,000 mensual" />
+      </div>
+      <div>
+        <label class="block mb-1">Descripción / Habilidades requeridas *</label>
+        <textarea id="e_descripcion" rows="3" placeholder="Ej. Buscamos vendedor con experiencia en campo, manejo de CRM, inglés básico..."></textarea>
+      </div>
+    </div>
+    <div id="msgEmpresa" class="mt-3 hidden"></div>
+    <button class="btn-primary mt-5" onclick="registrarEmpresa()">✅ Publicar vacante</button>
+  </div>
+</section>
+
+<!-- MATCHES -->
+<section id="matches" class="max-w-2xl mx-auto w-full px-4 mt-10 mb-10">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="section-title">🤝 Matches encontrados</h2>
+    <button onclick="cargarDatos()" class="text-sm font-semibold text-orange-500 hover:text-orange-600 transition">↻ Actualizar</button>
+  </div>
+  <div id="matchesContainer">
+    <div class="text-center py-10">
+      <div class="spinner mb-3"></div>
+      <p class="text-gray-400 text-sm">Cargando matches...</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="mt-auto py-6 px-4 text-center" style="background:#1E3A8A;">
+  <p class="text-blue-200 text-sm font-display font-semibold">BWIA Empleo Chihuahua – Matching con IA simple</p>
+  <p class="text-blue-400 text-xs mt-1">Conectando talento local · Chihuahua, México · 2025</p>
+</footer>
+
+<script>
+// ─────────────────────────────────────────────────────────────────────
+// ✅ CORRECCIÓN CORS: Se usa modo no-cors para POST (evita el error)
+//    y se maneja la respuesta de GET con try/catch robusto
+// ─────────────────────────────────────────────────────────────────────
+
+let GAS_URL = localStorage.getItem('bwia_gas_url') || '';
+
+// Mostrar URL guardada al cargar
+window.addEventListener('DOMContentLoaded', () => {
+  if (GAS_URL) {
+    document.getElementById('gasUrl').value = GAS_URL;
+    setGasStatus('✅ URL guardada: conectado a Google Sheets', 'green');
+  }
+  cargarDatos();
+});
+
+function setGasStatus(msg, color) {
+  const el = document.getElementById('gasStatus');
+  el.textContent = msg;
+  el.style.color = color === 'green' ? '#065f46' : color === 'red' ? '#991b1b' : '#1d4ed8';
+}
+
+function guardarGasUrl() {
+  const url = document.getElementById('gasUrl').value.trim();
+  if (!url.startsWith('https://script.google.com')) {
+    setGasStatus('⚠️ La URL debe comenzar con https://script.google.com', 'red');
+    return;
+  }
+  GAS_URL = url;
+  localStorage.setItem('bwia_gas_url', url);
+  setGasStatus('✅ Conectado correctamente. Cargando datos...', 'green');
+  cargarDatos();
+}
+
+// ── TABS ──────────────────────────────────────────────────────────────
+function showTab(tab) {
+  document.getElementById('formCandidato').classList.toggle('hidden', tab !== 'candidato');
+  document.getElementById('formEmpresa').classList.toggle('hidden', tab !== 'empresa');
+  document.getElementById('tabCandidato').classList.toggle('active', tab === 'candidato');
+  document.getElementById('tabEmpresa').classList.toggle('active', tab === 'empresa');
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────────
+function showMsg(id, text, ok) {
+  const el = document.getElementById(id);
+  el.textContent = text;
+  el.className = ok ? 'msg-ok mt-3' : 'msg-err mt-3';
+  el.classList.remove('hidden');
+  setTimeout(() => el.classList.add('hidden'), 6000);
+}
+
+function escHtml(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ─────────────────────────────────────────────────────────────────────
+// ✅ FUNCIÓN POST CORREGIDA
+//    Usa mode: 'no-cors' + Content-Type: 'text/plain' 
+//    Esto evita el error de CORS con Google Apps Script
+// ─────────────────────────────────────────────────────────────────────
+function postData(payload) {
+  if (!GAS_URL) {
+    alert('⚠️ Primero configura tu URL de Google Apps Script arriba y presiona Conectar.');
+    return Promise.reject('Sin URL');
+  }
+
+  // CORRECCIÓN CLAVE: no-cors con text/plain evita el preflight CORS
+  return fetch(GAS_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload)
+  }).then(() => {
+    // Con no-cors no podemos leer la respuesta, pero el dato SÍ llega a Sheets
+    return { ok: true };
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────
+// ✅ FUNCIÓN GET CORREGIDA
+//    Usa JSONP como fallback si CORS falla en el GET
+// ─────────────────────────────────────────────────────────────────────
+function fetchDatos(url) {
+  return new Promise((resolve, reject) => {
+    // Intento 1: fetch normal con cors
+    fetch(url + '?accion=leer', {
+      method: 'GET',
+      mode: 'cors',
+      cache: 'no-cache'
+    })
+    .then(r => {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.text();
+    })
+    .then(text => {
+      try {
+        resolve(JSON.parse(text));
+      } catch(e) {
+        reject(new Error('Respuesta no es JSON válido'));
+      }
+    })
+    .catch(err => {
+      // Intento 2: JSONP como respaldo
+      cargarConJSONP(url, resolve, reject);
+    });
+  });
+}
+
+function cargarConJSONP(url, resolve, reject) {
+  const callbackName = 'bwia_cb_' + Date.now();
+  window[callbackName] = function(data) {
+    delete window[callbackName];
+    document.getElementById('jsonpScript') && document.getElementById('jsonpScript').remove();
+    resolve(data);
+  };
+  const script = document.createElement('script');
+  script.id = 'jsonpScript';
+  script.src = url + '?accion=leer&callback=' + callbackName;
+  script.onerror = () => {
+    delete window[callbackName];
+    reject(new Error('JSONP también falló'));
+  };
+  document.head.appendChild(script);
+  setTimeout(() => {
+    if (window[callbackName]) {
+      delete window[callbackName];
+      reject(new Error('Timeout'));
+    }
+  }, 8000);
+}
+
+// ── REGISTRAR CANDIDATO ───────────────────────────────────────────────
+function registrarCandidato() {
+  const nombre = document.getElementById('c_nombre').value.trim();
+  const email  = document.getElementById('c_email').value.trim();
+  const tel    = document.getElementById('c_telefono').value.trim();
+  const puesto = document.getElementById('c_puesto').value.trim();
+  const hab    = document.getElementById('c_habilidades').value.trim();
+  if (!nombre || !email || !tel || !puesto || !hab) {
+    showMsg('msgCandidato', '⚠️ Por favor completa los campos obligatorios (*).', false);
+    return;
+  }
+  const payload = {
+    tipo: 'candidato', nombre, email,
+    telefono: tel,
+    ubicacion: document.getElementById('c_ubicacion').value.trim(),
+    experiencia: document.getElementById('c_experiencia').value.trim(),
+    habilidades: hab, puesto,
+    salarioODescripcion: document.getElementById('c_salario').value.trim()
+  };
+
+  showMsg('msgCandidato', '⏳ Guardando tu registro...', true);
+
+  postData(payload)
+    .then(() => {
+      showMsg('msgCandidato', '✅ ¡Registro exitoso! Tu perfil ya está en el sistema.', true);
+      // Limpiar formulario
+      ['c_nombre','c_email','c_telefono','c_ubicacion','c_experiencia','c_salario','c_puesto','c_habilidades']
+        .forEach(id => document.getElementById(id).value = '');
+      setTimeout(cargarDatos, 2000);
+    })
+    .catch(() => showMsg('msgCandidato', '❌ Error al guardar. Verifica tu URL de Apps Script.', false));
+}
+
+// ── REGISTRAR EMPRESA ────────────────────────────────────────────────
+function registrarEmpresa() {
+  const nombre  = document.getElementById('e_nombre').value.trim();
+  const email   = document.getElementById('e_email').value.trim();
+  const tel     = document.getElementById('e_telefono').value.trim();
+  const puesto  = document.getElementById('e_puesto').value.trim();
+  const desc    = document.getElementById('e_descripcion').value.trim();
+  if (!nombre || !email || !tel || !puesto || !desc) {
+    showMsg('msgEmpresa', '⚠️ Por favor completa los campos obligatorios (*).', false);
+    return;
+  }
+  const payload = {
+    tipo: 'empresa', nombre, email,
+    telefono: tel,
+    ubicacion: document.getElementById('e_ubicacion').value.trim(),
+    experiencia: '',
+    habilidades: desc, puesto,
+    salarioODescripcion: document.getElementById('e_salario').value.trim()
+  };
+
+  showMsg('msgEmpresa', '⏳ Publicando vacante...', true);
+
+  postData(payload)
+    .then(() => {
+      showMsg('msgEmpresa', '✅ ¡Vacante publicada! Ya está disponible en el sistema.', true);
+      ['e_nombre','e_email','e_telefono','e_ubicacion','e_puesto','e_salario','e_descripcion']
+        .forEach(id => document.getElementById(id).value = '');
+      setTimeout(cargarDatos, 2000);
+    })
+    .catch(() => showMsg('msgEmpresa', '❌ Error al publicar. Verifica tu URL de Apps Script.', false));
+}
+
+// ── MOTOR DE MATCHING ────────────────────────────────────────────────
+function tokenizar(str) {
+  return (str || '').toLowerCase()
+    .replace(/[^a-záéíóúüñ0-9\s,]/g, ' ')
+    .split(/[\s,]+/).filter(w => w.length > 2);
+}
+
+function coincidencia(tokensA, tokensB) {
+  if (!tokensA.length || !tokensB.length) return 0;
+  const m = tokensA.filter(t => tokensB.some(b => b.includes(t) || t.includes(b)));
+  return m.length / Math.max(tokensA.length, tokensB.length);
+}
+
+function zonaMatch(ubA, ubB) {
+  const a = (ubA || '').toLowerCase();
+  const b = (ubB || '').toLowerCase();
+  if (!a || !b) return 0.5;
+  const zonas = [['centro'],['juárez','juarez','cd juárez'],['delicias'],['cuauhtémoc','cuauhtemoc'],['chihuahua']];
+  for (const zona of zonas) {
+    if (zona.some(z => a.includes(z)) && zona.some(z => b.includes(z))) return 1;
+  }
+  if (a.includes('chihuahua') || b.includes('chihuahua')) return 0.6;
+  return 0.3;
+}
+
+function calcularMatch(c, e) {
+  const puestoScore = coincidencia(tokenizar(c.PuestoOBuscado), tokenizar(e.PuestoOBuscado));
+  const habScore    = coincidencia(tokenizar(c.Habilidades), tokenizar(e.Habilidades));
+  const ubiScore    = zonaMatch(c.Ubicacion, e.Ubicacion);
+  let salScore = 0.5;
+  const cSal = parseFloat((c.SalarioODescripcion || '').replace(/[^0-9]/g,'')) || 0;
+  const eSal = parseFloat((e.SalarioODescripcion || '').replace(/[^0-9]/g,'')) || 0;
+  if (cSal && eSal) salScore = Math.max(0, 1 - Math.abs(cSal - eSal) / Math.max(cSal, eSal));
+
+  const total = (puestoScore * 0.40) + (habScore * 0.20) + (ubiScore * 0.20) + (salScore * 0.20);
+  const pct   = Math.round(Math.min(total, 1) * 100);
+
+  let razones = [];
+  if (puestoScore > 0.5) razones.push(`Puesto: "${c.PuestoOBuscado}" ↔ "${e.PuestoOBuscado}"`);
+  if (habScore > 0.3)    razones.push('Habilidades compartidas');
+  if (ubiScore > 0.7)    razones.push(`Misma zona (${c.Ubicacion || 'Chihuahua'})`);
+  if (salScore > 0.7)    razones.push('Salario compatible');
+  if (!razones.length)   razones.push('Coincidencia parcial de perfil');
+
+  return { pct, razon: razones.join(' · ') };
+}
+
+function colorPct(pct) {
+  if (pct >= 75) return '#16a34a';
+  if (pct >= 50) return '#2563eb';
+  if (pct >= 30) return '#d97706';
+  return '#6b7280';
+}
+
+// ── RENDERIZAR MATCHES ───────────────────────────────────────────────
+function renderMatches(candidatos, empresas) {
+  const cont = document.getElementById('matchesContainer');
+  if (!candidatos.length && !empresas.length) {
+    cont.innerHTML = `<div class="demo-note mb-4">💡 Aún no hay datos en Google Sheets. Se muestran ejemplos demo.</div>${renderDemoMatches()}`;
+    return;
+  }
+  let pares = [];
+  for (const c of candidatos)
+    for (const e of empresas) {
+      const { pct, razon } = calcularMatch(c, e);
+      if (pct >= 25) pares.push({ c, e, pct, razon });
+    }
+  pares.sort((a,b) => b.pct - a.pct);
+  if (!pares.length) {
+    cont.innerHTML = `<div class="card p-8 text-center text-gray-400">
+      <p class="text-4xl mb-3">🔍</p>
+      <p class="font-semibold">No se encontraron matches por ahora.</p>
+      <p class="text-sm mt-1">Registra candidatos y empresas para ver matches aquí.</p>
+    </div>`;
+    return;
+  }
+  cont.innerHTML = `<p class="text-sm text-gray-400 mb-4">Mostrando <strong>${pares.length}</strong> matches (≥25% compatibilidad)</p>` +
+    pares.slice(0, 20).map((p, i) => `
+    <div class="match-card mb-3" style="animation-delay:${i*60}ms">
+      <div class="flex items-start justify-between gap-3 mb-3">
+        <div class="flex-1 min-w-0">
+          <div class="flex flex-wrap gap-2 mb-1">
+            <span class="tag">👤 ${escHtml(p.c.Nombre)}</span>
+            <span class="tag tag-empresa">🏢 ${escHtml(p.e.Nombre)}</span>
+          </div>
+          <p class="text-xs text-gray-500 mt-1">💡 ${escHtml(p.razon)}</p>
+        </div>
+        <div class="text-right flex-shrink-0">
+          <div class="match-pct" style="color:${colorPct(p.pct)}">${p.pct}%</div>
+          <p class="text-xs text-gray-400 font-semibold">match</p>
+        </div>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${p.pct}%"></div></div>
+      <div class="flex flex-wrap gap-3 mt-3 text-xs text-gray-500">
+        <span>🎯 ${escHtml(p.c.PuestoOBuscado || '—')} → ${escHtml(p.e.PuestoOBuscado || '—')}</span>
+        ${p.c.Ubicacion ? `<span>📍 ${escHtml(p.c.Ubicacion)}</span>` : ''}
+        ${p.c.Telefono ? `<a href="https://wa.me/${p.c.Telefono.replace(/[^0-9]/g,'')}" target="_blank" class="text-green-600 font-semibold hover:underline">📲 WhatsApp</a>` : ''}
+      </div>
+    </div>`).join('');
+}
+
+function renderDemoMatches() {
+  const demos = [
+    { pct:88, c:'Ana García', e:'Tiendas Norteño SA', puesto:'Vendedora → Ejecutiva de Ventas', zona:'Centro Chihuahua', razon:'Puesto: "Ventas" ↔ "Ejecutiva de Ventas" · Habilidades compartidas · Misma zona' },
+    { pct:72, c:'Carlos Ríos', e:'Desarrollos Tech Chih', puesto:'Programador → Dev Junior', zona:'Chihuahua Oriente', razon:'Puesto: "Programador" ↔ "Dev Junior" · Habilidades: JS, Python · Salario compatible' },
+    { pct:55, c:'Laura Medina', e:'Contadores Asociados SC', puesto:'Contadora → Auxiliar Contable', zona:'Delicias, Chih', razon:'Habilidades compartidas · Zona aproximada' },
+  ];
+  return demos.map((d,i) => `
+    <div class="match-card mb-3 opacity-80" style="animation-delay:${i*80}ms">
+      <div class="flex items-start justify-between gap-3 mb-3">
+        <div class="flex-1">
+          <div class="flex flex-wrap gap-2 mb-1">
+            <span class="tag">👤 ${d.c}</span>
+            <span class="tag tag-empresa">🏢 ${d.e}</span>
+            <span class="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full font-bold">DEMO</span>
+          </div>
+          <p class="text-xs text-gray-500 mt-1">💡 ${d.razon}</p>
+        </div>
+        <div class="text-right flex-shrink-0">
+          <div class="match-pct" style="color:${colorPct(d.pct)}">${d.pct}%</div>
+          <p class="text-xs text-gray-400 font-semibold">match</p>
+        </div>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${d.pct}%"></div></div>
+      <div class="flex gap-3 mt-3 text-xs text-gray-500">
+        <span>🎯 ${d.puesto}</span><span>📍 ${d.zona}</span>
+      </div>
+    </div>`).join('');
+}
+
+// ── CARGAR DATOS ─────────────────────────────────────────────────────
+function cargarDatos() {
+  const cont = document.getElementById('matchesContainer');
+  cont.innerHTML = `<div class="text-center py-10"><div class="spinner mb-3"></div><p class="text-gray-400 text-sm">Cargando datos de Google Sheets...</p></div>`;
+
+  if (!GAS_URL) {
+    setTimeout(() => {
+      cont.innerHTML = `<div class="demo-note mb-4">⚙️ Conecta tu Google Apps Script arriba para ver datos reales.</div>${renderDemoMatches()}`;
+    }, 600);
+    return;
+  }
+
+  fetchDatos(GAS_URL)
+    .then(res => {
+      if (res && res.ok && Array.isArray(res.data)) {
+        const candidatos = res.data.filter(r => r.Tipo === 'candidato');
+        const empresas   = res.data.filter(r => r.Tipo === 'empresa');
+        setGasStatus(`✅ Conectado · ${candidatos.length} candidatos · ${empresas.length} empresas`, 'green');
+        renderMatches(candidatos, empresas);
+      } else {
+        cont.innerHTML = `<div class="msg-err">⚠️ Respuesta inesperada del servidor. Verifica tu Apps Script.</div>`;
+      }
+    })
+    .catch(err => {
+      setGasStatus('⚠️ No se pudo conectar. Verifica la URL y los permisos del Apps Script.', 'red');
+      cont.innerHTML = `
+        <div class="demo-note mb-4">
+          ⚠️ <strong>No se pudo conectar con Google Sheets.</strong><br/>
+          Verifica que tu URL sea correcta y que el Apps Script esté desplegado con acceso <em>"Cualquier persona"</em>.
+        </div>
+        ${renderDemoMatches()}`;
+    });
+}
+</script>
+</body>
+</html>
